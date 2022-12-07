@@ -1,6 +1,8 @@
 const express = require('express');
 const Joi = require('joi');
 require('dotenv').config();
+// Custom Imports
+const logger = require('./logger');
 
 const courses = [
   { id: 1, name: 'courses 1' },
@@ -11,6 +13,16 @@ const courses = [
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+app.use(logger);
+
+app.use(function (req, res, next) {
+  console.log('Authentication');
+
+  next();
+});
 
 // todo REST Api Home Page
 app.get('/', function (req, res) {
