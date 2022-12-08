@@ -1,4 +1,5 @@
 const config = require('config');
+const debug = require('debug')('app:startup');
 const express = require('express');
 const Joi = require('joi');
 const helmet = require('helmet');
@@ -20,25 +21,35 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(helmet());
 
+// todo Pug for generating HTML Markup for Client
+app.set('view engine', 'pug');
+app.set('views', './views'); // default
+
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'));
 
-  console.log('Morgan enabled...');
+  debug('Morgan enabled...'); // console.log()
 }
-console.log('Application name : ' + config.get('name'));
-console.log('Mail server : ' + config.get('mail.host'));
 
-app.use(logger);
+// console.log('Application name : ' + config.get('name'));
+// console.log('Mail server : ' + config.get('mail.host'));
 
-app.use(function (req, res, next) {
-  console.log('Authentication');
+// todo Custom middle ware
+// app.use(logger);
 
-  next();
-});
+// app.use(function (req, res, next) {
+//   console.log('Authentication');
+
+//   next();
+// });
 
 // todo REST Api Home Page
 app.get('/', function (req, res) {
-  res.send('Hello World');
+  // res.send('Hello World');
+  res.render('index', {
+    title: 'My Express App',
+    message: 'Hello',
+  });
 });
 
 // todo Getting all courses
